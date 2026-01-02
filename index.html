@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="uk">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Target Practice</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <div class="menu-container">
+      <h1 class="game-title">TARGET PRACTICE</h1>
+
+      <section class="gamemodes">
+        <div class="mode-item" onclick="location.href='game.html?mode=classic'">
+          <div class="mode-header">КЛАСИЧНИЙ РЕЖИМ</div>
+          <div class="mode-content-wrapper">
+            <div class="mode-content">
+              <p class="record-text">
+                Ваш рекорд: <span class="best-score-value">0</span>
+              </p>
+              <p>
+                Стандартне тренування:
+                <span class="positive_atr">5 життів</span>. Не допускайте
+                промахів та остерігайтеся <span class="negative_atr">небезпечних цілей!</span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mode-item" onclick="location.href='game.html?mode=timer'">
+          <div class="mode-header">ТАЙМЕР</div>
+          <div class="mode-content-wrapper">
+            <div class="mode-content">
+              <p class="record-text">
+                Ваш рекорд: <span class="best-score-value">0</span>
+              </p>
+              <p>
+                У вас є <span class="positive_atr">2 хвилини</span>. Наберіть
+                максимум очок. Життя не обмежені, але
+                <span class="negative_atr"
+                  >небезпечні цілі штрафують рахунок</span
+                >.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="mode-item" onclick="location.href='game.html?mode=storm'">
+          <div class="mode-header">НА ХОДУ</div>
+          <div class="mode-content-wrapper">
+            <div class="mode-content">
+              <p class="record-text">
+                Ваш рекорд: <span class="best-score-value">0</span>
+              </p>
+              <p>
+                Ускладнений класичний режим: мішені
+                <span class="negative_atr">постійно рухаються</span>!
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="targets-legend">
+        <h3>ТИПИ МІШЕНЕЙ</h3>
+        <div class="legend-grid">
+          <div class="legend-item">
+            <img src="assets/images/target_red.svg" alt="Червона мішень" />
+            <p>Звичайна: додає <span class="positive_atr">5</span> очок.</p>
+          </div>
+          <div class="legend-item">
+            <img src="assets/images/target_yellow.svg" alt="Жовта мішень" />
+            <p>Золота: додає <span class="positive_atr">20</span> очок.</p>
+          </div>
+          <div class="legend-item">
+            <img src="assets/images/target_blue.svg" alt="Синя мішень" />
+            <p>Синя: віднімає <span class="negative_atr">5</span> очок.</p>
+          </div>
+          <div class="legend-item">
+            <img src="assets/images/target_green.svg" alt="Зелена мішень" />
+            <p>
+              Зелена: віднімає <span class="negative_atr">1 життя</span> або
+              <span class="negative_atr">-50</span> очок.
+            </p>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <script type="module" src="js/Menu.js"></script>
+  </body>
+</html>

@@ -1,0 +1,157 @@
+:root {
+  --bg-color: #0f0f0f;
+  --card-bg: #1a1a1a;
+  --accent-color: #ffd41d;
+  --text-main: #ffffff;
+  --text-dim: #aaaaaa;
+  --positive: #2ecc71;
+  --negative: #e74c3c;
+  --transition-speed: 0.5s;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  font-family: "Segoe UI", Roboto, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.menu-container {
+  width: 90%;
+  max-width: 600px;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.game-title {
+  font-size: clamp(2rem, 8vw, 3.5rem);
+  letter-spacing: 4px;
+  margin-bottom: 40px;
+  color: var(--text-main);
+  text-shadow: 0 0 20px rgba(255, 212, 29, 0.4);
+  text-transform: uppercase;
+}
+
+.gamemodes {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 50px;
+}
+
+.mode-item {
+  background: var(--card-bg);
+  border-radius: 12px;
+  border: 1px solid #333;
+  cursor: pointer;
+  display: grid;
+  grid-template-rows: auto 0fr;
+  transition: grid-template-rows 0.2s ease-in, border-color 0.2s ease,
+    transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mode-item:hover {
+  border-color: var(--accent-color);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(255, 212, 29, 0.15);
+  grid-template-rows: auto 1fr;
+  transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+}
+
+.mode-header {
+  padding: 24px;
+  font-size: 1.25rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  transition: padding 0.2s ease-in;
+}
+
+.mode-item:hover .mode-header {
+  padding-bottom: 12px;
+  transition: padding 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mode-content-wrapper {
+  overflow: hidden;
+}
+
+.mode-content {
+  padding: 0 24px 24px 24px;
+  color: var(--text-dim);
+  line-height: 1.6;
+  font-size: 1rem;
+  opacity: 0;
+  transition: opacity 0.15s ease-in;
+}
+
+.mode-item:hover .mode-content {
+  opacity: 1;
+  transition: opacity 0.4s ease-out 0.1s;
+}
+
+.negative_atr {
+  color: var(--negative);
+  font-weight: bold;
+}
+.positive_atr {
+  color: var(--positive);
+  font-weight: bold;
+}
+
+.targets-legend {
+  background: rgba(255, 255, 255, 0.02);
+  padding: 30px 20px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.targets-legend h3 {
+  font-size: clamp(1rem, 8vw, 1.5rem);
+  color: var(--text-dim);
+  letter-spacing: 2px;
+  margin-bottom: 25px;
+}
+
+.legend-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px 20px;
+  margin-top: 25px;
+}
+
+.legend-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  font-size: clamp(0.85rem, 6vw, 1.1rem);
+  color: var(--text-dim);
+}
+
+.legend-item img {
+  min-width: 50px;
+  width: 35%;
+}
+
+.record-text {
+  color: var(--accent-color);
+}
+
+@media (max-width: 480px) {
+  .menu-container {
+    width: 95%;
+  }
+  .mode-header {
+    font-size: 1.1rem;
+    padding: 20px;
+  }
+  .legend-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
