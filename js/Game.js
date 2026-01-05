@@ -3,19 +3,16 @@ import { Target } from './Target.js';
 
 class Game {
     constructor() {
-        // Визначаємо режим
         const params = new URLSearchParams(window.location.search);
         this.mode = params.get('mode') || 'classic';
         this.settings = CONFIG.MODES[this.mode];
 
-        // Стан гри
         this.score = 0;
         this.lives = this.settings.initialLives;
         this.isGameOver = false;
         this.activeTargets = [];
         this.gameStartTime = Date.now();
 
-        // DOM елементи
         this.canvas = document.getElementById('game-canvas');
         this.scoreEl = document.getElementById('current-score');
         this.livesEl = document.getElementById('lives-count');
@@ -27,35 +24,56 @@ class Game {
     init() {
         this.updateUI();
         this.startTimers();
-        this.spawnBatch(); // Перша хвиля
+        this.spawnBatch();
+        
+        // Додаємо слухач для клавіші Esc
+        window.addEventListener('keydown', (e) => this.handleKeyDown(e));
+    }
+
+    // Обробка натискання клавіш
+    handleKeyDown(e) {
+        if (e.key === 'Escape' && !this.isGameOver) {
+            this.endGame();
+        }
     }
 
     startTimers() {
-        // Інтервал появи мішеней
         this.spawnInterval = setInterval(() => {
             if (!this.isGameOver) this.spawnBatch();
         }, this.settings.spawnInterval);
 
-        // Ігровий таймер (секундомір)
         this.gameTimer = setInterval(() => {
             if (!this.isGameOver) this.updateClock();
         }, 1000);
     }
 
+    getCurrentSpawnCount() {
+        const extraCircles = Math.floor(this.score / 300);
+        const count = this.settings.circlesPerSpawn + extraCircles;
+        return Math.min(count, 10);
+    }
+
     spawnBatch() {
-        for (let i = 0; i < this.settings.circlesPerSpawn; i++) {
+        const count = this.getCurrentSpawnCount();
+        for (let i = 0; i < count; i++) {
             this.createValidTarget();
         }
     }
 
+    getCurrentTargetSize() {
+        const reduction = Math.floor(this.score / CONFIG.circle.pointsPerStep) * CONFIG.circle.sizeStep;
+        const newSize = CONFIG.circle.initialSize - reduction;
+        return Math.max(newSize, CONFIG.circle.minSize);
+    }
+
     createValidTarget() {
         const type = this.getRandomType();
-        let coords = this.getRandomCoords();
+        const currentSize = this.getCurrentTargetSize();
+        let coords = this.getRandomCoords(currentSize);
         let attempts = 0;
 
-        // Перевірка на накладання (максимум 10 спроб знайти місце)
-        while (this.checkOverlap(coords.x, coords.y) && attempts < 10) {
-            coords = this.getRandomCoords();
+        while (this.checkOverlap(coords.x, coords.y, currentSize) && attempts < 10) {
+            coords = this.getRandomCoords(currentSize);
             attempts++;
         }
 
@@ -63,6 +81,7 @@ class Game {
             type, 
             coords.x, 
             coords.y, 
+            currentSize, 
             (t) => this.handleHit(t), 
             (t) => this.handleExpire(t)
         );
@@ -80,25 +99,38 @@ class Game {
         }
     }
 
-    getRandomCoords() {
+    getRandomCoords(size) {
+        const width = this.canvas.offsetWidth || window.innerWidth;
+        const height = this.canvas.offsetHeight || (window.innerHeight - 80);
+
         return {
-            x: Math.random() * (this.canvas.clientWidth - CONFIG.circle.size),
-            y: Math.random() * (this.canvas.clientHeight - CONFIG.circle.size)
+            x: Math.random() * (width - size),
+            y: Math.random() * (height - size)
         };
     }
 
-    checkOverlap(x, y) {
+    checkOverlap(x, y, size) {
         return this.activeTargets.some(target => {
-            const dx = target.x - x;
-            const dy = target.y - y;
+            const centerX1 = target.x + target.size / 2;
+            const centerY1 = target.y + target.size / 2;
+            const centerX2 = x + size / 2;
+            const centerY2 = y + size / 2;
+
+            const dx = centerX1 - centerX2;
+            const dy = centerY1 - centerY2;
             const distance = Math.sqrt(dx * dx + dy * dy);
-            return distance < CONFIG.circle.size;
+            
+            return distance < (target.size / 2 + size / 2);
         });
     }
 
     handleHit(target) {
+        if (this.isGameOver) return;
         this.score += target.type.hitScore;
-        if (target.type.id === 'green') this.lives -= 1; // Зелений — пастка
+        
+        if (target.type.id === 'green') {
+            this.lives -= 1; 
+        }
         
         this.activeTargets = this.activeTargets.filter(t => t !== target);
         this.updateUI();
@@ -106,11 +138,11 @@ class Game {
     }
 
     handleExpire(target) {
-        // Логіка зникнення за правилами
+        if (this.isGameOver) return;
         if (target.type.id === 'red' || target.type.id === 'yellow') {
             this.lives -= 1;
         } else {
-            this.score += target.type.missBonusScore;
+            this.score += target.type.missBonusScore; // Бонуси за сині та зелені
         }
 
         this.activeTargets = this.activeTargets.filter(t => t !== target);
@@ -120,7 +152,8 @@ class Game {
 
     updateUI() {
         this.scoreEl.textContent = this.score;
-        this.livesEl.textContent = this.lives;
+        const displayLives = Math.max(0, this.lives);
+        this.livesEl.textContent = this.lives !== Infinity ? `${displayLives}x` : '∞';
     }
 
     updateClock() {
@@ -141,11 +174,18 @@ class Game {
         clearInterval(this.spawnInterval);
         clearInterval(this.gameTimer);
         
+        this.activeTargets.forEach(target => {
+            if (target.element && target.element.parentNode) {
+                target.element.remove();
+            }
+        });
+        this.activeTargets = [];
+
         document.getElementById('res-score').textContent = this.score;
         document.getElementById('res-mode').textContent = this.settings.name;
+        document.getElementById('res-time').textContent = this.timerEl.textContent;
         document.getElementById('game-over-screen').classList.remove('hidden');
         
-        // Збереження рекорду
         const key = `bestScore_${this.mode}`;
         const currentBest = localStorage.getItem(key) || 0;
         if (this.score > currentBest) localStorage.setItem(key, this.score);

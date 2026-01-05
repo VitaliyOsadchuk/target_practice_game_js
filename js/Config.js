@@ -1,53 +1,74 @@
 export const CONFIG = {
-    // цілі
-    circle: {
-        size: 50,
-        staticTime: 3000,
-        shrinkTime: 3000,
-        postHitDisplayTime: 1000 // 1 с
+  circle: {
+    initialSize: 100,
+    minSize: 50,
+    sizeStep: 10,
+    pointsPerStep: 200,
+    staticTime: 3000,
+    shrinkTime: 3000,
+    postHitDisplayTime: 1000,
+  },
+  targetTypes: {
+    RED: {
+      id: "red",
+      chance: 0.5,
+      hitScore: 5,
+      missPenaltyLife: 1,
+      missBonusScore: 0,
+      image: "target_red.svg",
     },
-
-    // типи цілей
-    targetTypes: {
-        RED:    { id: 'red',    chance: 0.50, hitScore: 5,  missPenaltyLife: 1, missBonusScore: 0,  image: 'target_red.svg' },
-        BLUE:   { id: 'blue',   chance: 0.20, hitScore: -5, missPenaltyLife: 0, missBonusScore: 5,  image: 'target_blue.svg' },
-        YELLOW: { id: 'yellow', chance: 0.15, hitScore: 20, missPenaltyLife: 1, missBonusScore: 0,  image: 'target_yellow.svg' },
-        GREEN:  { id: 'green',  chance: 0.15, hitScore: 0,  missPenaltyLife: 1, missBonusScore: 50, image: 'target_green.svg', isTrap: true }
+    BLUE: {
+      id: "blue",
+      chance: 0.2,
+      hitScore: -5,
+      missPenaltyLife: 0,
+      missBonusScore: 5,
+      image: "target_blue.svg",
+    }, 
+    YELLOW: {
+      id: "yellow",
+      chance: 0.15,
+      hitScore: 20,
+      missPenaltyLife: 1,
+      missBonusScore: 0,
+      image: "target_yellow.svg",
     },
-
-    // режими
-    MODES: {
-        classic: {
-            name: "Класика",
-            initialLives: 5,
-            hasTimer: true,
-            timerDirection: 'up', // таймер
-            spawnInterval: 5000,
-            circlesPerSpawn: 3,
-            isMoving: false,
-            winCondition: 'lives' // з життями
-        },
-        timer: {
-            name: "Таймер",
-            initialLives: Infinity,
-            hasTimer: true,
-            timerDirection: 'down', // відлік
-            gameDuration: 120, // 2 хвилини
-            spawnInterval: 3000,
-            circlesPerSpawn: 4,
-            isMoving: false,
-            winCondition: 'time' // за часом
-        },
-        storm: {
-            name: "На ходу",
-            initialLives: 3,
-            hasTimer: true,
-            timerDirection: 'up',
-            spawnInterval: 4000,
-            circlesPerSpawn: 2,
-            isMoving: true, // рух цілей
-            moveSpeed: 2,
-            winCondition: 'lives'
-        }
-    }
+    GREEN: {
+      id: "green",
+      chance: 0.15,
+      hitScore: 0,
+      missPenaltyLife: 1,
+      missBonusScore: 20,
+      image: "target_green.svg",
+      isTrap: true,
+    }, 
+  },
+  MODES: {
+    classic: {
+      name: "Класика",
+      initialLives: 5,
+      spawnInterval: 5000,
+      circlesPerSpawn: 3,
+      isMoving: false,
+      winCondition: "lives",
+    },
+    timer: {
+      name: "Таймер",
+      initialLives: Infinity,
+      gameDuration: 120,
+      spawnInterval: 3000,
+      circlesPerSpawn: 4,
+      isMoving: false,
+      winCondition: "time",
+    },
+    storm: {
+      name: "На ходу",
+      initialLives: 3,
+      spawnInterval: 4000,
+      circlesPerSpawn: 2,
+      isMoving: true,
+      moveSpeed: 2,
+      winCondition: "lives",
+    },
+  },
 };
