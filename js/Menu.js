@@ -1,11 +1,8 @@
-// import { Storage } from './Storage.js';
-
 document.addEventListener("DOMContentLoaded", () => {
     const modeItems = document.querySelectorAll(".mode-item");
 
     modeItems.forEach((item) => {
         const onclickAttr = item.getAttribute("onclick");
-
         if (!onclickAttr) return;
 
         const match = onclickAttr.match(/mode=([a-z]+)/);
@@ -19,4 +16,17 @@ document.addEventListener("DOMContentLoaded", () => {
             scoreSpan.textContent = bestScore;
         }
     });
+
+    const resetBtn = document.getElementById("reset-all-scores");
+
+    if (resetBtn) {
+        resetBtn.addEventListener("click", () => {
+            const isConfirmed = confirm("Видалити всі рекорди?");
+
+            if (isConfirmed) {
+                localStorage.clear();
+                location.reload();
+            }
+        });
+    }
 });
