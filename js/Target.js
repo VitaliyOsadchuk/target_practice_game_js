@@ -50,11 +50,11 @@ export class Target {
     this.isHit = true;
     clearTimeout(this.expireTimeout);
 
-    // Фіксація розміру при влучанні
+    // Зупинка зменшення: фіксуємо поточний масштаб
     const style = window.getComputedStyle(this.element);
-    const currentMatrix = style.transform;
+    const currentTransform = style.transform;
     this.element.style.transition = "none";
-    this.element.style.transform = currentMatrix;
+    this.element.style.transform = currentTransform;
 
     this.createBulletHole(e);
     this.onHit(this);

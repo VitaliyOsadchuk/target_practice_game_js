@@ -23,15 +23,13 @@ class Game {
 
   init() {
     this.updateUI();
-    this.updateClock();
+    this.updateClock(); // Оновлюємо таймер миттєво при старті
     this.startTimers();
     this.spawnBatch();
 
-    // Додаємо слухач для клавіші Esc
     window.addEventListener("keydown", (e) => this.handleKeyDown(e));
   }
 
-  // Обробка натискання клавіш
   handleKeyDown(e) {
     if (e.key === "Escape" && !this.isGameOver) {
       this.endGame();
@@ -48,10 +46,10 @@ class Game {
     }, 1000);
   }
 
+  // +1 ціль за кожні 300 очок (макс. 10)
   getCurrentSpawnCount() {
     const extraCircles = Math.floor(this.score / 300);
-    const count = this.settings.circlesPerSpawn + extraCircles;
-    return Math.min(count, 10);
+    return Math.min(this.settings.circlesPerSpawn + extraCircles, 10);
   }
 
   spawnBatch() {
@@ -61,12 +59,15 @@ class Game {
     }
   }
 
+  // -10px за кожні 200 очок (мін. 50px)
   getCurrentTargetSize() {
     const reduction =
       Math.floor(this.score / CONFIG.circle.pointsPerStep) *
       CONFIG.circle.sizeStep;
-    const newSize = CONFIG.circle.initialSize - reduction;
-    return Math.max(newSize, CONFIG.circle.minSize);
+    return Math.max(
+      CONFIG.circle.initialSize - reduction,
+      CONFIG.circle.minSize
+    );
   }
 
   createValidTarget() {
@@ -96,19 +97,9 @@ class Game {
     this.canvas.appendChild(target.element);
   }
 
-  getRandomType() {
-    const rand = Math.random();
-    let cumulativeProbability = 0;
-    for (const key in CONFIG.targetTypes) {
-      cumulativeProbability += CONFIG.targetTypes[key].chance;
-      if (rand < cumulativeProbability) return CONFIG.targetTypes[key];
-    }
-  }
-
   getRandomCoords(size) {
     const width = this.canvas.offsetWidth || window.innerWidth;
     const height = this.canvas.offsetHeight || window.innerHeight - 80;
-
     return {
       x: Math.random() * (width - size),
       y: Math.random() * (height - size),
@@ -121,21 +112,24 @@ class Game {
       const centerY1 = target.y + target.size / 2;
       const centerX2 = x + size / 2;
       const centerY2 = y + size / 2;
-
       const dx = centerX1 - centerX2;
       const dy = centerY1 - centerY2;
-      const distance = Math.sqrt(dx * dx + dy * dy);
-
-      return distance < target.size / 2 + size / 2;
+      return Math.sqrt(dx * dx + dy * dy) < target.size / 2 + size / 2;
     });
   }
 
   handleHit(target) {
     if (this.isGameOver) return;
-    this.score += target.type.hitScore;
+
+    // заборона на відємний рахунок
+    this.score = Math.max(0, this.score + target.type.hitScore);
 
     if (target.type.id === "green") {
-      this.lives -= 1;
+      if (this.mode === "timer") {
+        this.score = Math.max(0, this.score - 50);
+      } else {
+        this.lives -= 1;
+      }
     }
 
     this.activeTargets = this.activeTargets.filter((t) => t !== target);
@@ -145,10 +139,11 @@ class Game {
 
   handleExpire(target) {
     if (this.isGameOver) return;
+
     if (target.type.id === "red" || target.type.id === "yellow") {
       this.lives -= 1;
     } else {
-      this.score += target.type.missBonusScore; // Бонуси за сині та зелені
+      this.score = Math.max(0, this.score + target.type.missBonusScore);
     }
 
     this.activeTargets = this.activeTargets.filter((t) => t !== target);
@@ -158,25 +153,19 @@ class Game {
 
   updateUI() {
     this.scoreEl.textContent = this.score;
-
     if (this.lives === Infinity) {
       this.livesEl.textContent = "∞";
     } else {
-      const displayLives = Math.max(0, this.lives);
-      this.livesEl.textContent = `${displayLives}x`;
+      this.livesEl.textContent = `${Math.max(0, this.lives)}x`;
     }
   }
 
   updateClock() {
     const elapsed = Math.floor((Date.now() - this.gameStartTime) / 1000);
-    let displaySeconds;
+    let displaySeconds = elapsed;
 
     if (this.settings.timerDirection === "down") {
-      // Зворотний відлік: початкова тривалість мінус час, що минув
       displaySeconds = Math.max(0, this.settings.gameDuration - elapsed);
-    } else {
-      // Прямий відлік (секундомір)
-      displaySeconds = elapsed;
     }
 
     const mins = Math.floor(displaySeconds / 60)
@@ -185,10 +174,9 @@ class Game {
     const secs = (displaySeconds % 60).toString().padStart(2, "0");
     this.timerEl.textContent = `${mins}:${secs}`;
 
-    // Якщо час вийшов у режимі таймера — завершуємо гру
     if (
       this.settings.timerDirection === "down" &&
-      displaySeconds <= 0 &&
+      displaySeconds === 0 &&
       !this.isGameOver
     ) {
       this.endGame();
@@ -211,9 +199,7 @@ class Game {
     clearInterval(this.gameTimer);
 
     this.activeTargets.forEach((target) => {
-      if (target.element && target.element.parentNode) {
-        target.element.remove();
-      }
+      if (target.element?.parentNode) target.element.remove();
     });
     this.activeTargets = [];
 
@@ -223,8 +209,18 @@ class Game {
     document.getElementById("game-over-screen").classList.remove("hidden");
 
     const key = `bestScore_${this.mode}`;
-    const currentBest = localStorage.getItem(key) || 0;
-    if (this.score > currentBest) localStorage.setItem(key, this.score);
+    if (this.score > (localStorage.getItem(key) || 0)) {
+      localStorage.setItem(key, this.score);
+    }
+  }
+
+  getRandomType() {
+    const rand = Math.random();
+    let cumulativeProbability = 0;
+    for (const key in CONFIG.targetTypes) {
+      cumulativeProbability += CONFIG.targetTypes[key].chance;
+      if (rand < cumulativeProbability) return CONFIG.targetTypes[key];
+    }
   }
 }
 

@@ -1,9 +1,9 @@
 export const CONFIG = {
   circle: {
-    initialSize: 100,
-    minSize: 50,
-    sizeStep: 10,
-    pointsPerStep: 200,
+    initialSize: 100, // Початковий розмір 100px
+    minSize: 50, // Мінімальний розмір 50px
+    sizeStep: 10, // Зменшення на 10px
+    pointsPerStep: 200, // Кожні 200 очок
     staticTime: 3000,
     shrinkTime: 3000,
     postHitDisplayTime: 1000,
@@ -24,7 +24,7 @@ export const CONFIG = {
       missPenaltyLife: 0,
       missBonusScore: 5,
       image: "target_blue.svg",
-    }, 
+    },
     YELLOW: {
       id: "yellow",
       chance: 0.15,
@@ -41,7 +41,7 @@ export const CONFIG = {
       missBonusScore: 20,
       image: "target_green.svg",
       isTrap: true,
-    }, 
+    },
   },
   MODES: {
     classic: {
@@ -49,16 +49,16 @@ export const CONFIG = {
       initialLives: 5,
       spawnInterval: 5000,
       circlesPerSpawn: 3,
-      isMoving: false,
+      timerDirection: "up",
       winCondition: "lives",
     },
     timer: {
       name: "Таймер",
       initialLives: Infinity,
-      gameDuration: 120,
+      gameDuration: 120, // 2 хвилини
       spawnInterval: 3000,
       circlesPerSpawn: 4,
-      isMoving: false,
+      timerDirection: "down",
       winCondition: "time",
     },
     storm: {
@@ -66,6 +66,7 @@ export const CONFIG = {
       initialLives: 3,
       spawnInterval: 4000,
       circlesPerSpawn: 2,
+      timerDirection: "up",
       isMoving: true,
       moveSpeed: 2,
       winCondition: "lives",
