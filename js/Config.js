@@ -1,20 +1,20 @@
 export const CONFIG = {
-  circle: {
-    initialSize: 100, // Початковий розмір 100px
-    minSize: 50, // Мінімальний розмір 50px
-    sizeStep: 10, // Зменшення на 10px
-    pointsPerStep: 200, // Кожні 200 очок
+  circle: { //налаштування цілей
+    initialSize: 100, // Початковий розмір x px ()потребує корегування області спавна в Game.js)
+    minSize: 50, // Мінімальний розмір ілі,  X px
+    sizeStep: 10, // Зменшення на X px
+    pointsPerStep: 200, // Кожні x очок зменшення розміру на SizeStep
     staticTime: 3000,
     shrinkTime: 3000,
     postHitDisplayTime: 1000,
   },
-  targetTypes: {
+  targetTypes: { // опис цілей
     RED: {
       id: "red",
-      chance: 0.5,
-      hitScore: 5,
-      missPenaltyLife: 1,
-      missBonusScore: 0,
+      chance: 0.5, // ймовірність появи
+      hitScore: 5, // очки за влучання
+      missPenaltyLife: 1, // покарання за пропуск
+      missBonusScore: 0, // бонус за пропуск
       image: "target_red.svg",
     },
     BLUE: {
@@ -43,14 +43,14 @@ export const CONFIG = {
       isTrap: true,
     },
   },
-  MODES: {
+  MODES: { //опис режимів
     classic: {
       name: "Класика",
-      initialLives: 5,
-      spawnInterval: 5000,
-      circlesPerSpawn: 3,
-      timerDirection: "up",
-      winCondition: "lives",
+      initialLives: 5, // початкова кількість життів
+      spawnInterval: 5000, // інтервал появи цілей в мс
+      circlesPerSpawn: 3, // кількість цілей за спавн
+      timerDirection: "up", //відлік часу вгору
+      winCondition: "lives", //умова перемоги
     },
     timer: {
       name: "Таймер",
@@ -58,17 +58,17 @@ export const CONFIG = {
       gameDuration: 120, // 2 хвилини
       spawnInterval: 3000,
       circlesPerSpawn: 4,
-      timerDirection: "down",
+      timerDirection: "down", //відлік часу
       winCondition: "time",
     },
     storm: {
       name: "На ходу",
-      initialLives: 3,
-      spawnInterval: 4000,
-      circlesPerSpawn: 2,
+      initialLives: 5,
+      spawnInterval: 5000,
+      circlesPerSpawn: 3,
       timerDirection: "up",
-      isMoving: true,
-      moveSpeed: 2,
+      isMoving: true, //рухомі цілі
+      moveSpeed: 2, 
       winCondition: "lives",
     },
   },
