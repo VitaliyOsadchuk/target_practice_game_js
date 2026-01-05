@@ -1,0 +1,43 @@
+.game-body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+#game-canvas {
+    flex: 1;
+    background-color: #232b32;
+    position: relative;
+    cursor: crosshair;
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+/* Стиль для кружечків */
+.circle {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-size: cover;
+    background-position: center;
+    transition: transform 3s linear; /* Анімація звуження */
+    z-index: 10;
+}
+
+.bullet-hole {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-image: url('../assets/images/bullet_hole.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    z-index: 20;
+}
