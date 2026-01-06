@@ -2,3 +2,12 @@
 @import "menu.css";
 @import "game.css";
 @import "ui.css";
+
+:root {
+  --bg-primary: #1a1a2e;
+  --bg-secondary: #16213e;
+  --accent-color: #f1c40f;
+  --text-color: #ffffff;
+  --danger-color: #e74c3c;
+  --header-footer-bg-color: #313647;
+}

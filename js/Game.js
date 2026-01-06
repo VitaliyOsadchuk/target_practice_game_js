@@ -24,7 +24,7 @@ class Game {
 
   init() {
     this.updateUI();
-    this.updateClock(); // Оновлюємо таймер миттєво при старті
+    this.updateClock(); 
     this.startTimers();
     this.spawnBatch();
 
@@ -51,7 +51,7 @@ class Game {
     }, 1000);
   }
 
-  // +1 ціль за кожні 300 очок (макс. 10)
+  // +1 ціль за кожні x очок (макс. 10 цілей на полі)
   getCurrentSpawnCount() {
     const extraCircles = Math.floor(this.score / 300);
     return Math.min(this.settings.circlesPerSpawn + extraCircles, 10);
@@ -64,7 +64,7 @@ class Game {
     }
   }
 
-  // -10px за кожні 200 очок (мін. 50px)
+  // -10px за кожні x очок (мін. 50px)
   getCurrentTargetSize() {
     const reduction =
       Math.floor(this.score / CONFIG.circle.pointsPerStep) *
@@ -234,18 +234,17 @@ class Game {
   getCurrentMoveSpeed() {
     if (!this.settings.isMoving) return 0;
 
-    // Розраховуємо кількість кроків по 500 очок
     const extraSpeed = Math.floor(
       this.score / this.settings.pointsPerSpeedStep
     );
 
-    // Поточна швидкість (не перевищує maxMoveSpeed з конфігу)
+    // Поточна швидкість
     const newSpeed = Math.min(
       this.settings.initialMoveSpeed + extraSpeed,
       this.settings.maxMoveSpeed
     );
 
-    // Виводимо в консоль рядок ТІЛЬКИ якщо швидкість реально змінилася
+    // Вивід в консоль швидкості при зміні
     if (newSpeed !== this.lastLoggedSpeed) {
       console.log(`Поточна швидкість змінена на: ${newSpeed}`);
       this.lastLoggedSpeed = newSpeed;

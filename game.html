@@ -1,43 +1,47 @@
 <!DOCTYPE html>
 <html lang="uk">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Target Practice</title>
-    <link rel="stylesheet" href="css/styles.css">
-</head>
-<body class="game-body">
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body class="game-body">
     <header class="game-ui">
-        <div id="ui-lives" class="ui-block hearts-section">
-            <span id="lives-count">5x</span>
-            <img src="assets/images/heart.svg" alt="Heart" class="heart-icon">
-        </div>
+      <div id="ui-lives" class="ui-block hearts-section">
+        <span id="lives-count">5x</span>
+        <img src="assets/images/heart.svg" alt="Heart" class="heart-icon" />
+      </div>
 
-        <div id="ui-timer" class="ui-block timer-section">
-            <span id="game-timer">00:00</span>
-        </div>
+      <div id="ui-timer" class="ui-block timer-section">
+        <span id="game-timer">00:00</span>
+      </div>
 
-        <div id="ui-score" class="ui-block score-section">
-            <span id="current-score">0</span>
-        </div>
+      <div id="ui-score" class="ui-block score-section">
+        <span id="current-score">0</span>
+      </div>
     </header>
 
     <main id="game-canvas"></main>
 
     <div id="game-over-screen" class="hidden">
-        <div class="modal">
-            <h2 id="modal-title">КІНЕЦЬ ГРИ</h2>
-            <div class="stats">
-                <p>Режим: <span id="res-mode">-</span></p>
-                <p>Рахунок: <span id="res-score">0</span></p>
-                <p>Час: <span id="res-time">00:00</span></p>
-            </div>
-            <div class="modal-buttons">
-                <button onclick="location.reload()">ГРАТИ ЗНОВУ</button>
-                <button onclick="location.href='index.html'">ГОЛОВНЕ МЕНЮ</button>
-            </div>
+      <div class="modal">
+        <h2 id="modal-title">КІНЕЦЬ ГРИ</h2>
+        <div class="stats">
+          <p>Режим: <span id="res-mode">-</span></p>
+          <p>Рахунок: <span id="res-score">0</span></p>
+          <p>Час: <span id="res-time">00:00</span></p>
         </div>
+        <div class="modal-buttons">
+          <button onclick="location.reload()">ГРАТИ ЗНОВУ</button>
+          <button onclick="location.href='index.html'">ГОЛОВНЕ МЕНЮ</button>
+        </div>
+      </div>
     </div>
+
+    <footer class="game-footer">
+      <p>Щоб перервати гру натисніть <span class="accent-key">ESC</span></p>
+    </footer>
     <script type="module" src="js/Game.js"></script>
-</body>
+  </body>
 </html>

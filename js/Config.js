@@ -68,7 +68,7 @@ export const CONFIG = {
       name: "На ходу",
       initialLives: 5,
       spawnInterval: 4000,
-      circlesPerSpawn: 2,
+      circlesPerSpawn: 3,
       timerDirection: "up",
       isMoving: true, //рухомі цілі
       initialMoveSpeed: 1, // Початкова швидкість

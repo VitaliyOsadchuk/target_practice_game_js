@@ -81,7 +81,6 @@ export class Target {
     this.isHit = true;
     clearTimeout(this.expireTimeout);
 
-    // Зупинка зменшення: фіксуємо поточний масштаб
     const style = window.getComputedStyle(this.element);
     const currentTransform = style.transform;
     this.element.style.transition = "none";
