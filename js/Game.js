@@ -31,7 +31,6 @@ class Game {
     if (this.settings.isMoving) {
       this.animate();
     }
-
     window.addEventListener("keydown", (e) => this.handleKeyDown(e));
   }
 
