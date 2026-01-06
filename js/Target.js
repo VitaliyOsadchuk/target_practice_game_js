@@ -1,7 +1,7 @@
 import { CONFIG } from "./Config.js";
 
 export class Target {
-  constructor(type, x, y, size, onHit, onExpire) {
+  constructor(type, x, y, size, onHit, onExpire, moveSpeed = 0) {
     this.type = type;
     this.x = x;
     this.y = y;
@@ -9,9 +9,40 @@ export class Target {
     this.onHit = onHit;
     this.onExpire = onExpire;
     this.isHit = false;
+    this.moveSpeed = moveSpeed;
+
+    // встановлення напрямку руху, якщо рухомий
+    if (this.moveSpeed > 0) {
+      const angle = Math.random() * Math.PI * 2;
+      this.vx = Math.cos(angle) * this.moveSpeed;
+      this.vy = Math.sin(angle) * this.moveSpeed;
+    }
 
     this.element = this.createDOM();
     this.startTimers();
+  }
+
+  update(canvasWidth, canvasHeight) {
+    if (this.isHit || this.moveSpeed === 0) return;
+
+    this.x += this.vx;
+    this.y += this.vy;
+
+    // Відбивання від лівої/правої стінки
+    if (this.x <= 0 || this.x + this.size >= canvasWidth) {
+      this.vx *= -1;
+      this.x = Math.max(0, Math.min(this.x, canvasWidth - this.size));
+    }
+
+    // Відбивання від верхньої/нижньої стінки
+    if (this.y <= 0 || this.y + this.size >= canvasHeight) {
+      this.vy *= -1;
+      this.y = Math.max(0, Math.min(this.y, canvasHeight - this.size));
+    }
+
+    // Оновлення
+    this.element.style.left = `${this.x}px`;
+    this.element.style.top = `${this.y}px`;
   }
 
   createDOM() {

@@ -1,14 +1,16 @@
 export const CONFIG = {
-  circle: { //налаштування цілей
-    initialSize: 100, // Початковий розмір x px ()потребує корегування області спавна в Game.js)
-    minSize: 50, // Мінімальний розмір ілі,  X px
+  circle: {
+    //налаштування цілей
+    initialSize: 100, // Початковий розмір x px (потребує корегування області спавна в Game.js)
+    minSize: 50, // Мінімальний розмір цілі,  X px
     sizeStep: 10, // Зменшення на X px
     pointsPerStep: 200, // Кожні x очок зменшення розміру на SizeStep
     staticTime: 3000,
     shrinkTime: 3000,
     postHitDisplayTime: 1000,
   },
-  targetTypes: { // опис цілей
+  targetTypes: {
+    // опис цілей
     RED: {
       id: "red",
       chance: 0.5, // ймовірність появи
@@ -43,11 +45,12 @@ export const CONFIG = {
       isTrap: true,
     },
   },
-  MODES: { //опис режимів
+  MODES: {
+    //опис режимів
     classic: {
       name: "Класика",
       initialLives: 5, // початкова кількість життів
-      spawnInterval: 5000, // інтервал появи цілей в мс
+      spawnInterval: 4000, // інтервал появи цілей в мс
       circlesPerSpawn: 3, // кількість цілей за спавн
       timerDirection: "up", //відлік часу вгору
       winCondition: "lives", //умова перемоги
@@ -64,11 +67,13 @@ export const CONFIG = {
     storm: {
       name: "На ходу",
       initialLives: 5,
-      spawnInterval: 5000,
-      circlesPerSpawn: 3,
+      spawnInterval: 4000,
+      circlesPerSpawn: 2,
       timerDirection: "up",
       isMoving: true, //рухомі цілі
-      moveSpeed: 2, 
+      initialMoveSpeed: 1, // Початкова швидкість
+      maxMoveSpeed: 5, // Макс швидкість
+      pointsPerSpeedStep: 300, // кожні x очок +1 до moveSpeed
       winCondition: "lives",
     },
   },

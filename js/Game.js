@@ -12,6 +12,7 @@ class Game {
     this.isGameOver = false;
     this.activeTargets = [];
     this.gameStartTime = Date.now();
+    this.lastLoggedSpeed = 0;
 
     this.canvas = document.getElementById("game-canvas");
     this.scoreEl = document.getElementById("current-score");
@@ -26,6 +27,10 @@ class Game {
     this.updateClock(); // Оновлюємо таймер миттєво при старті
     this.startTimers();
     this.spawnBatch();
+
+    if (this.settings.isMoving) {
+      this.animate();
+    }
 
     window.addEventListener("keydown", (e) => this.handleKeyDown(e));
   }
@@ -73,6 +78,7 @@ class Game {
   createValidTarget() {
     const type = this.getRandomType();
     const currentSize = this.getCurrentTargetSize();
+    const moveSpeed = this.getCurrentMoveSpeed();
     let coords = this.getRandomCoords(currentSize);
     let attempts = 0;
 
@@ -90,7 +96,8 @@ class Game {
       coords.y,
       currentSize,
       (t) => this.handleHit(t),
-      (t) => this.handleExpire(t)
+      (t) => this.handleExpire(t),
+      moveSpeed
     );
 
     this.activeTargets.push(target);
@@ -221,6 +228,43 @@ class Game {
       cumulativeProbability += CONFIG.targetTypes[key].chance;
       if (rand < cumulativeProbability) return CONFIG.targetTypes[key];
     }
+  }
+
+  // для рухомих цілей
+  getCurrentMoveSpeed() {
+    if (!this.settings.isMoving) return 0;
+
+    // Розраховуємо кількість кроків по 500 очок
+    const extraSpeed = Math.floor(
+      this.score / this.settings.pointsPerSpeedStep
+    );
+
+    // Поточна швидкість (не перевищує maxMoveSpeed з конфігу)
+    const newSpeed = Math.min(
+      this.settings.initialMoveSpeed + extraSpeed,
+      this.settings.maxMoveSpeed
+    );
+
+    // Виводимо в консоль рядок ТІЛЬКИ якщо швидкість реально змінилася
+    if (newSpeed !== this.lastLoggedSpeed) {
+      console.log(`Поточна швидкість змінена на: ${newSpeed}`);
+      this.lastLoggedSpeed = newSpeed;
+    }
+
+    return newSpeed;
+  }
+
+  animate() {
+    if (this.isGameOver) return;
+
+    const width = this.canvas.offsetWidth;
+    const height = this.canvas.offsetHeight;
+
+    this.activeTargets.forEach((target) => {
+      target.update(width, height);
+    });
+
+    requestAnimationFrame(() => this.animate());
   }
 }
 
